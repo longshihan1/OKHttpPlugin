@@ -71,6 +71,10 @@ public class OkHttpTransform extends Transform {
                         e.printStackTrace();
                     }
                 });
+                input.getDirectoryInputs().forEach(directoryInput -> {
+                    handleDirectoryInput(directoryInput, outputProvider);
+                });
+
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,8 +85,8 @@ public class OkHttpTransform extends Transform {
      * 处理Jar中的class文件
      */
     static void handleJarInputs(JarInput jarInput, TransformOutputProvider outputProvider) throws Exception {
-        File tmpFile=null;
-        File dest=null;
+        File tmpFile = null;
+        File dest = null;
         try {
             if (jarInput.getFile().getAbsolutePath().endsWith(".jar")) {
                 //重名名输出文件,因为可能同名,会覆盖
@@ -95,7 +99,7 @@ public class OkHttpTransform extends Transform {
                         jarInput.getContentTypes(), jarInput.getScopes(), Format.JAR);
                 JarFile jarFile = new JarFile(jarInput.getFile());
                 Enumeration enumeration = jarFile.entries();
-                tmpFile = new File(jarInput.getFile().getParent() + File.separator + "classes_temp"+jarName+".jar");
+                tmpFile = new File(jarInput.getFile().getParent() + File.separator + "classes_temp" + jarName + ".jar");
                 //避免上次的缓存被重复插入
                 if (tmpFile.exists()) {
                     tmpFile.delete();
@@ -132,9 +136,23 @@ public class OkHttpTransform extends Transform {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (tmpFile.exists()&&dest!=null){
+            if (tmpFile.exists() && dest != null) {
                 FileUtils.copyFile(tmpFile, dest);
             }
         }
     }
+
+    static void handleDirectoryInput(DirectoryInput directoryInput, TransformOutputProvider outputProvider) {
+        try {
+            //是否为目录
+            if (directoryInput.getFile().isDirectory()) {
+                File dest = outputProvider.getContentLocation(directoryInput.getName(), directoryInput.getContentTypes(),
+                        directoryInput.getScopes(), Format.DIRECTORY);
+                FileUtils.copyDirectory(directoryInput.getFile(), dest);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
