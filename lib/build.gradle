@@ -1,0 +1,26 @@
+apply plugin: 'java-library'
+apply plugin: 'maven'
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api gradleApi()
+    compileOnly 'com.android.tools.build:gradle:4.0.0'
+    testCompileOnly 'com.android.tools.build:gradle:4.0.0'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+
+uploadArchives { //当前项目可以发布到本地文件夹中
+    repositories {
+        mavenDeployer {
+            pom.groupId = "com.longshihan.okhttpplugin"
+            pom.version = "0.0.1"
+            repository(url: uri('../repo')) //定义本地maven仓库的地址
+        }
+    }
+}
