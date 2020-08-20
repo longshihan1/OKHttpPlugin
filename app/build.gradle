@@ -24,10 +24,10 @@ android {
         }
     }
 }
-apply plugin: 'okhttpplugin'
-dadaconfig {
-    okhttpPluginEnable=true
-}
+//apply plugin: 'okhttpplugin'
+//dadaconfig {
+//    okhttpPluginEnable=true
+//}
 
 
 

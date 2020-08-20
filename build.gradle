@@ -5,14 +5,14 @@ buildscript {
         maven {url uri('repo')}
         google()
         jcenter()
-//        maven { url 'https://jitpack.io' }
-        maven {url uri('repo')}
+        maven { url 'https://jitpack.io' }
+//        maven {url uri('repo')}
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-//        classpath 'com.github.longshihan1:OKHttpPlugin:0.01'
-        classpath 'com.longshihan.okhttpplugin:lib:0.0.3'
+//        classpath 'com.github.longshihan1:OKHttpPlugin:0.03'
+//        classpath 'com.longshihan.okhttpplugin:lib:0.0.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -23,8 +23,8 @@ allprojects {
         maven {url uri('repo')}
         google()
         jcenter()
-//        maven { url 'https://jitpack.io' }
-        maven {url uri('repo')}
+        maven { url 'https://jitpack.io' }
+//        maven {url uri('repo')}
     }
 }
 
