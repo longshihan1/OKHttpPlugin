@@ -2,6 +2,7 @@ package com.longshihan.okhttpplugin;
 
 import com.android.build.api.transform.*;
 import com.android.build.gradle.internal.pipeline.TransformManager;
+import com.android.tools.r8.graph.S;
 import com.android.utils.FileUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.utils.IOUtils;
@@ -60,16 +61,19 @@ public class OkHttpTransform extends Transform {
     @Override
     public void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         super.transform(transformInvocation);
+        long startTime=System.currentTimeMillis();
+        if (!ConfigUtils.okhttpEnable){
+            System.out.println(" Okhttpplugin 插件关闭 2");
+            return;
+        }else {
+            System.out.println(" Okhttpplugin 打开");
+        }
         try {
             Collection<TransformInput> inputs = transformInvocation.getInputs();
             TransformOutputProvider outputProvider = transformInvocation.getOutputProvider();
             inputs.forEach(input -> {
                 input.getJarInputs().forEach(jarInput -> {
-                    try {
                         handleJarInputs(jarInput, outputProvider);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 });
                 input.getDirectoryInputs().forEach(directoryInput -> {
                     handleDirectoryInput(directoryInput, outputProvider);
@@ -78,13 +82,16 @@ public class OkHttpTransform extends Transform {
             });
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(0);
+        }finally {
+            System.out.println(" 插件耗时： "+(System.currentTimeMillis()-startTime)+"ms");
         }
     }
 
     /**
      * 处理Jar中的class文件
      */
-    static void handleJarInputs(JarInput jarInput, TransformOutputProvider outputProvider) throws Exception {
+    static void handleJarInputs(JarInput jarInput, TransformOutputProvider outputProvider)  {
         File tmpFile = null;
         File dest = null;
         try {
@@ -106,6 +113,7 @@ public class OkHttpTransform extends Transform {
                 }
                 JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(tmpFile));
                 //用于保存
+
                 while (enumeration.hasMoreElements()) {
                     JarEntry jarEntry = (JarEntry) enumeration.nextElement();
                     String entryName = jarEntry.getName();
@@ -136,9 +144,8 @@ public class OkHttpTransform extends Transform {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (tmpFile.exists() && dest != null) {
-                FileUtils.copyFile(tmpFile, dest);
-            }
+            System.err.println(e.getMessage());
+            System.exit(0);
         }
     }
 
@@ -152,7 +159,7 @@ public class OkHttpTransform extends Transform {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(0);
         }
     }
-
 }

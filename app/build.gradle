@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'okhttpplugin'
+
 
 android {
     compileSdkVersion 29
@@ -24,6 +24,12 @@ android {
         }
     }
 }
+apply plugin: 'okhttpplugin'
+dadaconfig {
+    okhttpPluginEnable=true
+}
+
+
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -37,3 +43,4 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.8.1")
 
 }
+
